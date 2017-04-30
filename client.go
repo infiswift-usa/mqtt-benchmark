@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+        "fmt"
 	"log"
 	"time"
 )
@@ -118,7 +118,7 @@ func (c *Client) pubMessages(in, out chan *Message, doneGen, donePub chan bool) 
 
 	opts := mqtt.NewClientOptions().
 		AddBroker(c.BrokerURL).
-		SetClientID(fmt.Sprintf("mqtt-benchmark-%v-%v", time.Now(), c.ID)).
+                SetClientID(fmt.Sprintf("test%v", c.ID)).
 		SetCleanSession(true).
 		SetAutoReconnect(true).
 		SetOnConnectHandler(onConnected).
@@ -126,8 +126,8 @@ func (c *Client) pubMessages(in, out chan *Message, doneGen, donePub chan bool) 
 		log.Printf("CLIENT %v lost connection to the broker: %v. Will reconnect...\n", c.ID, reason.Error())
 	})
 	if c.BrokerUser != "" && c.BrokerPass != "" {
-		opts.SetUsername(c.BrokerUser)
-		opts.SetPassword(c.BrokerPass)
+		opts.SetUsername(fmt.Sprintf("test%v", c.ID))
+		opts.SetPassword(fmt.Sprintf("test%v", c.ID))
 	}
 	client := mqtt.NewClient(opts)
 	token := client.Connect()

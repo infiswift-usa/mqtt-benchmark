@@ -66,6 +66,7 @@ func main() {
 		size     = flag.Int("size", 100, "Size of the messages payload (bytes)")
 		count    = flag.Int("count", 100, "Number of messages to send per client")
 		clients  = flag.Int("clients", 10, "Number of clients to start")
+                start    = flag.Int("start", 1, "Starting client number")
 		format   = flag.String("format", "text", "Output format: text|json")
 		quiet    = flag.Bool("quiet", false, "Suppress logs while running")
 	)
@@ -76,8 +77,8 @@ func main() {
 	}
 
 	resCh := make(chan *RunResults)
-	start := time.Now()
-	for i := 0; i < *clients; i++ {
+	startTime := time.Now()
+	for i := *start; i < *clients + *start; i++ {
 		if !*quiet {
 			log.Println("Starting client ", i)
 		}
@@ -100,7 +101,7 @@ func main() {
 	for i := 0; i < *clients; i++ {
 		results[i] = <-resCh
 	}
-	totalTime := time.Now().Sub(start)
+	totalTime := time.Now().Sub(startTime)
 	totals := calculateTotalResults(results, totalTime)
 
 	// print stats

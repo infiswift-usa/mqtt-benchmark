@@ -16,6 +16,7 @@ The tool supports multiple concurrent clients, configurable message size, etc:
 Usage of mqtt-benchmark:
   -broker="tcp://localhost:1883": MQTT broker endpoint as scheme://host:port
   -clients=10: Number of clients to start
+  -start=1: Starting client number
   -count=100: Number of messages to send per client
   -format="text": Output format: text|json
   -password="": MQTT password (empty if auth disabled)
