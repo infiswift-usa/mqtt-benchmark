@@ -67,9 +67,10 @@ func (c *Client) Run(res chan *RunResults) {
 }
 
 func (c *Client) genMessages(ch chan *Message, done chan bool) {
+        clientTopic := fmt.Sprintf("/topic/%v", c.ID)
 	for i := 0; i < c.MsgCount; i++ {
 		ch <- &Message{
-			Topic:   c.MsgTopic,
+			Topic:   clientTopic,
 			QoS:     c.MsgQoS,
 			Payload: make([]byte, c.MsgSize),
 		}
@@ -125,10 +126,8 @@ func (c *Client) pubMessages(in, out chan *Message, doneGen, donePub chan bool) 
 		SetConnectionLostHandler(func(client mqtt.Client, reason error) {
 		log.Printf("CLIENT %v lost connection to the broker: %v. Will reconnect...\n", c.ID, reason.Error())
 	})
-	if c.BrokerUser != "" && c.BrokerPass != "" {
-		opts.SetUsername(fmt.Sprintf("test%v", c.ID))
-		opts.SetPassword(fmt.Sprintf("test%v", c.ID))
-	}
+	opts.SetUsername(fmt.Sprintf("test%v", c.ID))
+	opts.SetPassword(fmt.Sprintf("test%v", c.ID))
 	client := mqtt.NewClient(opts)
 	token := client.Connect()
 	token.Wait()
